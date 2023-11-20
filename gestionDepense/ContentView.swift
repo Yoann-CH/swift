@@ -18,13 +18,16 @@ struct ContentView: View {
         NavigationView {
             ScrollView {
                 VStack(spacing: 10) {
-                    Image("depense")
-                        .resizable()
-                        .aspectRatio(contentMode: .fill)
-                        .frame(height: 300)
-                        .cornerRadius(8)
-                        .clipped()
-
+                    HStack {
+                        Spacer()
+                        Image("depense")
+                            .resizable()
+                            .aspectRatio(contentMode: .fill)
+                            .frame(width: 300, height: 300)
+                            .cornerRadius(150) // La moitié de la largeur et de la hauteur pour un cercle parfait
+                            .clipped()
+                        Spacer()
+                    }
                     formSection
                 }
             }
