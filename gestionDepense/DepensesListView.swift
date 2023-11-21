@@ -8,13 +8,16 @@
 import SwiftUI
 
 struct DepensesListView: View {
-    @Binding var depenses: [Depense]
+    @ObservedObject var depensesManager: DepensesManager
     @State private var showingEditView = false
-    @State private var selectedDepense: Depense? = nil
+    @State private var selectedDepense: Depense?
+    @State private var refreshID = UUID()
+    @State private var deleteIndexSet: IndexSet?
+    @State private var showingDeleteConfirmation = false
     let gradient = LinearGradient(
         gradient: Gradient(colors: [Color.blue.opacity(0.3), Color.blue.opacity(0.5)]),
-        startPoint: .topLeading,
-        endPoint: .bottomTrailing
+        startPoint: .bottomTrailing,
+        endPoint: .topLeading
     )
 
     var body: some View {
@@ -22,26 +25,33 @@ struct DepensesListView: View {
             ZStack {
                 gradient.edgesIgnoringSafeArea(.all)
                 
-                if depenses.isEmpty {
+                if depensesManager.depenses.isEmpty {
                     VStack {
-                        Image("aucuneDepense")
-                            .resizable()
-                            .scaledToFit()
-                            .frame(width: 200, height: 200)
-                            .cornerRadius(150)
-                            .foregroundColor(.white)
+                        AnimatedImageView(name: "aucuneDepense")
                         Text("Aucune dépense")
                             .font(.title)
                             .foregroundColor(.white)
                     }
                 } else {
                     List {
-                        ForEach(depenses) { depense in
-                            VStack(alignment: .leading) {
-                                Text("Montant: \(depense.montant)")
-                                Text("Catégorie: \(depense.categorie)")
-                                Text("Date: \(formattedDate(depense.date))")
-                                Text("Récurrente: \(depense.isRecurring ? "Oui" : "Non")")
+                        ForEach(depensesManager.depenses) { depense in
+                            HStack {
+                                VStack(alignment: .leading, spacing: 10) {
+                                    Text("Montant: \(depense.montant) €")
+                                    Text("Date: \(formattedDate(depense.date))")
+                                    HStack(alignment: .center) {
+                                        Text("Récurrente: ")
+                                        Image(systemName: depense.isRecurring ? "checkmark.circle" : "xmark.circle")
+                                            .resizable()
+                                            .foregroundColor(depense.isRecurring ? .green : .red)
+                                            .frame(width: 25, height: 25)
+                                    }
+                                }
+                                Spacer()
+                                categoryImage(for: depense.categorie)
+                                    .resizable()
+                                    .frame(width: 100, height: 100)
+                                    .cornerRadius(50)
                             }
                             .swipeActions(edge: .leading, allowsFullSwipe: true) {
                                 Button {
@@ -68,14 +78,47 @@ struct DepensesListView: View {
             }
             .sheet(isPresented: $showingEditView, content: {
                 if let depenseToEdit = selectedDepense {
-                    AddDepense(depenses: $depenses, editingDepense: depenseToEdit)
+                    EditDepenseView(depensesManager: depensesManager, isPresented: $showingEditView, editingDepense: depenseToEdit)
                 }
             })
+            .onChange(of: selectedDepense) { _ in
+                refreshID = UUID()
+            }
+            .id(refreshID)
+        }
+        .alert(isPresented: $showingDeleteConfirmation) {
+            Alert(
+                title: Text("Supprimer la dépense"),
+                message: Text("Êtes-vous sûr de vouloir supprimer cette dépense?"),
+                primaryButton: .destructive(Text("Supprimer")) {
+                    if let indexSet = deleteIndexSet {
+                        depensesManager.deleteDepense(at: indexSet)
+                    }
+                },
+                secondaryButton: .cancel(Text("Annuler"))
+            )
         }
     }
     
     func deleteDepense(at offsets: IndexSet) {
-        depenses.remove(atOffsets: offsets)
+        deleteIndexSet = offsets
+        showingDeleteConfirmation = true
+    }
+
+}
+
+func categoryImage(for category: String) -> Image {
+    switch category {
+    case "Nourriture":
+        return Image("nourriture")
+    case "Transport":
+        return Image("transport")
+    case "Loisirs":
+        return Image("loisirs")
+    case "Autre":
+        return Image("autre")
+    default:
+        return Image(systemName: "questionmark.circle")
     }
 }
 

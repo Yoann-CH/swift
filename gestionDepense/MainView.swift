@@ -8,20 +8,22 @@
 import SwiftUI
 
 struct MainView: View {
-    @State private var depenses = [Depense]()
+    @StateObject private var depensesManager = DepensesManager()
     @State private var selectedTab = 0
+    @State private var isPresented: Bool = false
 
     var body: some View {
         TabView(selection: $selectedTab) {
-            AddDepense(depenses: $depenses)
-                .tabItem {
-                    Label("Ajouter", systemImage: "plus.circle")
-                }
-                .tag(0)
 
-            DepensesListView(depenses: $depenses)
+            DepensesListView(depensesManager: depensesManager)
                 .tabItem {
                     Label("Liste", systemImage: "list.bullet")
+                }
+                .tag(0)
+            
+            EditDepenseView(depensesManager: depensesManager, isPresented: $isPresented)
+                .tabItem {
+                    Label("Ajouter", systemImage: "plus.circle")
                 }
                 .tag(1)
         }
