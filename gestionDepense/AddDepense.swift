@@ -7,11 +7,13 @@
 
 import SwiftUI
 
-struct ContentView: View {
+struct AddDepense: View {
+    @Binding var depenses: [Depense]
     @State private var amount: String = ""
     @State private var selectedCategory: String = "Nourriture"
     @State private var date = Date()
     @State private var isRecurring: Bool = false
+    var editingDepense: Depense?
     let categories = ["Nourriture", "Transport", "Loisirs", "Autre"]
 
     var body: some View {
@@ -24,20 +26,38 @@ struct ContentView: View {
                             .resizable()
                             .aspectRatio(contentMode: .fill)
                             .frame(width: 300, height: 300)
-                            .cornerRadius(150) // La moitié de la largeur et de la hauteur pour un cercle parfait
+                            .cornerRadius(150)
                             .clipped()
                         Spacer()
                     }
                     formSection
                 }
             }
-                .background(
-                    LinearGradient(
-                        gradient: Gradient(colors: [Color.blue.opacity(0.3), Color.blue.opacity(0.5)]),
-                        startPoint: .bottomTrailing,
-                        endPoint: .topLeading
-                    )
+            .background(
+                LinearGradient(
+                    gradient: Gradient(colors: [Color.blue.opacity(0.3), Color.blue.opacity(0.5)]),
+                    startPoint: .bottomTrailing,
+                    endPoint: .topLeading
                 )
+            )
+        }
+        .onAppear {
+            print("onAppear exécuté avec editingDepense: \(String(describing: editingDepense))") // Pour le débogage
+            if let depense = editingDepense {
+                self.amount = depense.montant
+                self.selectedCategory = depense.categorie
+                self.date = depense.date
+                self.isRecurring = depense.isRecurring
+            }
+        }
+        .onChange(of: editingDepense) { newValue in
+            if let newDepense = newValue {
+                // Mise à jour des champs de saisie
+                self.amount = newDepense.montant
+                self.selectedCategory = newDepense.categorie
+                self.date = newDepense.date
+                self.isRecurring = newDepense.isRecurring
+            }
         }
     }
 
@@ -68,7 +88,13 @@ struct ContentView: View {
             .padding(.vertical, 4)
 
             Button(action: {
-                // Logique pour enregistrer la dépense
+                if let editing = editingDepense, let index = depenses.firstIndex(where: { $0.id == editing.id }) {
+                    depenses[index] = Depense(montant: amount, categorie: selectedCategory, date: date, isRecurring: isRecurring)
+                } else {
+                    let nouvelleDepense = Depense(montant: amount, categorie: selectedCategory, date: date, isRecurring: isRecurring)
+                    depenses.append(nouvelleDepense)
+                }
+                resetForm()
             }) {
                 Text("Enregistrer")
                     .foregroundColor(.white)
@@ -84,6 +110,13 @@ struct ContentView: View {
         .cornerRadius(8)
         .padding([.horizontal, .top])
     }
+    
+    private func resetForm() {
+        amount = ""
+        selectedCategory = "Nourriture"
+        date = Date()
+        isRecurring = false
+    }
 }
 
 struct AnimatedButtonStyle: ButtonStyle {
@@ -93,12 +126,3 @@ struct AnimatedButtonStyle: ButtonStyle {
             .animation(.spring(), value: configuration.isPressed)
     }
 }
-
-struct ContentView_Previews: PreviewProvider {
-    static var previews: some View {
-        ContentView()
-    }
-}
-
-
-
