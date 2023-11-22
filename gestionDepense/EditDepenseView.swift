@@ -17,6 +17,7 @@ struct EditDepenseView: View {
     @State private var animate: Bool = false
     @State private var showNotification = false
     @State private var isAmountValid: Bool = true
+    @State private var isFavorite: Bool = false
     var editingDepense: Depense?
     let categories: [String] = ["Nourriture", "Transport", "Loisirs", "Autre"]
     var rotationDegrees: Double {
@@ -73,6 +74,7 @@ struct EditDepenseView: View {
                     self.selectedCategory = depense.categorie
                     self.date = depense.date
                     self.isRecurring = depense.isRecurring
+                    self.isFavorite = depense.isFavorite
                 }
             }
 
@@ -104,6 +106,22 @@ struct EditDepenseView: View {
             }
 
             Group {
+                if editingDepense != nil {
+                    Button(action: {
+                        self.isFavorite.toggle()
+                    }) {
+                        Image(systemName: isFavorite ? "star.fill" : "star")
+                            .foregroundColor(isFavorite ? .yellow : .gray)
+                            .padding()
+                            .background(Color.white)
+                            .cornerRadius(20)
+                            .shadow(radius: 3)
+                    }
+                    .transition(.scale)
+                    
+                    Divider()
+                }
+                
                 TextField("Montant", text: validatedAmount)
                     .textFieldStyle(RoundedBorderTextFieldStyle())
                     .keyboardType(.decimalPad)
@@ -134,7 +152,8 @@ struct EditDepenseView: View {
                     return
                 }
                 if let editing = editingDepense, let index = depensesManager.depenses.firstIndex(where: { $0.id == editing.id }) {
-                    depensesManager.updateDepense(Depense(montant: amount, categorie: selectedCategory, date: date, isRecurring: isRecurring), at: index)
+                    let updatedDepense = Depense(montant: amount, categorie: selectedCategory, date: date, isRecurring: isRecurring, isFavorite: isFavorite)
+                    depensesManager.updateDepense(updatedDepense, at: index)
                 } else {
                     let nouvelleDepense = Depense(montant: amount, categorie: selectedCategory, date: date, isRecurring: isRecurring)
                     depensesManager.addDepense(nouvelleDepense)
@@ -160,6 +179,7 @@ struct EditDepenseView: View {
                         .cornerRadius(8)
                 }
             }
+            .buttonStyle(AnimatedButtonStyle())
             .padding(.top, 10)
         }
         .padding()

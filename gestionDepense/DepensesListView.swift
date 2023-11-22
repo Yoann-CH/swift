@@ -36,8 +36,13 @@ struct DepensesListView: View {
                     List {
                         ForEach(depensesManager.depenses) { depense in
                             HStack {
+                                if depense.isFavorite {
+                                    Image(systemName: "star.fill")
+                                        .foregroundColor(.yellow)
+                                }
                                 VStack(alignment: .leading, spacing: 10) {
-                                    Text("Montant: \(depense.montant) €")
+                                    let deviseSymbol = symbolForCurrencyCode(depense.devise)
+                                    Text("Montant: \(depense.montant) \(deviseSymbol)")
                                     Text("Date: \(formattedDate(depense.date))")
                                     HStack(alignment: .center) {
                                         Text("Récurrente: ")
@@ -127,4 +132,18 @@ func formattedDate(_ date: Date) -> String {
     dateFormatter.dateFormat = "dd/MM/yyyy"
 
     return dateFormatter.string(from: date)
+}
+
+func symbolForCurrencyCode(_ code: String) -> String {
+    switch code {
+    case "USD": return "$"
+    case "EUR": return "€"
+    case "GBP": return "£"
+    case "JPY": return "¥"
+    case "CAD": return "CA$"
+    case "AUD": return "AU$"
+    case "CNY": return "¥"
+    case "INR": return "₹"
+    default: return code
+    }
 }

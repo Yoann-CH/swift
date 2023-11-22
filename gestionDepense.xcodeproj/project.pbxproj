@@ -7,6 +7,11 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		D571A5642B0DF1B400CDEAE9 /* ChartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D571A5632B0DF1B400CDEAE9 /* ChartView.swift */; };
+		D571A5662B0E09BF00CDEAE9 /* UserSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = D571A5652B0E09BF00CDEAE9 /* UserSettings.swift */; };
+		D571A5682B0E09FF00CDEAE9 /* ProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D571A5672B0E09FF00CDEAE9 /* ProfileView.swift */; };
+		D571A56A2B0E4F5E00CDEAE9 /* BudgetComparisonGraphView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D571A5692B0E4F5E00CDEAE9 /* BudgetComparisonGraphView.swift */; };
+		D571A56C2B0E54F000CDEAE9 /* DonutChartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D571A56B2B0E54F000CDEAE9 /* DonutChartView.swift */; };
 		D5A7D5FC2B0CA07700DDD0D3 /* DepensesListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5A7D5FB2B0CA07700DDD0D3 /* DepensesListView.swift */; };
 		D5A7D5FE2B0CA0D900DDD0D3 /* MainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5A7D5FD2B0CA0D900DDD0D3 /* MainView.swift */; };
 		D5A7D6002B0CA14400DDD0D3 /* Depense.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5A7D5FF2B0CA14400DDD0D3 /* Depense.swift */; };
@@ -20,6 +25,11 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		D571A5632B0DF1B400CDEAE9 /* ChartView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChartView.swift; sourceTree = "<group>"; };
+		D571A5652B0E09BF00CDEAE9 /* UserSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserSettings.swift; sourceTree = "<group>"; };
+		D571A5672B0E09FF00CDEAE9 /* ProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileView.swift; sourceTree = "<group>"; };
+		D571A5692B0E4F5E00CDEAE9 /* BudgetComparisonGraphView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BudgetComparisonGraphView.swift; sourceTree = "<group>"; };
+		D571A56B2B0E54F000CDEAE9 /* DonutChartView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DonutChartView.swift; sourceTree = "<group>"; };
 		D5A7D5FB2B0CA07700DDD0D3 /* DepensesListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DepensesListView.swift; sourceTree = "<group>"; };
 		D5A7D5FD2B0CA0D900DDD0D3 /* MainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainView.swift; sourceTree = "<group>"; };
 		D5A7D5FF2B0CA14400DDD0D3 /* Depense.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Depense.swift; sourceTree = "<group>"; };
@@ -64,13 +74,18 @@
 			isa = PBXGroup;
 			children = (
 				D5A7D6032B0CFC5E00DDD0D3 /* Animation.swift */,
+				D571A5692B0E4F5E00CDEAE9 /* BudgetComparisonGraphView.swift */,
+				D571A5632B0DF1B400CDEAE9 /* ChartView.swift */,
 				D5A7D5FF2B0CA14400DDD0D3 /* Depense.swift */,
 				D5A7D6052B0D00B500DDD0D3 /* DepenseManager.swift */,
+				D571A56B2B0E54F000CDEAE9 /* DonutChartView.swift */,
 				D5A7D6012B0CF1AA00DDD0D3 /* NotificationView.swift */,
 				D5A7D5FD2B0CA0D900DDD0D3 /* MainView.swift */,
 				D5A7D5FB2B0CA07700DDD0D3 /* DepensesListView.swift */,
+				D571A5672B0E09FF00CDEAE9 /* ProfileView.swift */,
 				D5E0DF0D2B0B8CB9007FC021 /* gestionDepenseApp.swift */,
 				D5E0DF0F2B0B8CB9007FC021 /* EditDepenseView.swift */,
+				D571A5652B0E09BF00CDEAE9 /* UserSettings.swift */,
 				D5E0DF112B0B8CBA007FC021 /* Assets.xcassets */,
 				D5E0DF132B0B8CBA007FC021 /* Preview Content */,
 			);
@@ -157,12 +172,17 @@
 			files = (
 				D5A7D5FC2B0CA07700DDD0D3 /* DepensesListView.swift in Sources */,
 				D5A7D5FE2B0CA0D900DDD0D3 /* MainView.swift in Sources */,
+				D571A5642B0DF1B400CDEAE9 /* ChartView.swift in Sources */,
+				D571A5662B0E09BF00CDEAE9 /* UserSettings.swift in Sources */,
 				D5A7D6002B0CA14400DDD0D3 /* Depense.swift in Sources */,
 				D5E0DF102B0B8CB9007FC021 /* EditDepenseView.swift in Sources */,
 				D5E0DF0E2B0B8CB9007FC021 /* gestionDepenseApp.swift in Sources */,
 				D5A7D6022B0CF1AA00DDD0D3 /* NotificationView.swift in Sources */,
 				D5A7D6062B0D00B500DDD0D3 /* DepenseManager.swift in Sources */,
+				D571A56A2B0E4F5E00CDEAE9 /* BudgetComparisonGraphView.swift in Sources */,
+				D571A5682B0E09FF00CDEAE9 /* ProfileView.swift in Sources */,
 				D5A7D6042B0CFC5E00DDD0D3 /* Animation.swift in Sources */,
+				D571A56C2B0E54F000CDEAE9 /* DonutChartView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
