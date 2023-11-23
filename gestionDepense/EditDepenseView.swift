@@ -18,6 +18,7 @@ struct EditDepenseView: View {
     @State private var showNotification = false
     @State private var isAmountValid: Bool = true
     @State private var isFavorite: Bool = false
+    @State private var refreshID = UUID()
     var editingDepense: Depense?
     let categories: [String] = ["Nourriture", "Transport", "Loisirs", "Autre"]
     var rotationDegrees: Double {
@@ -75,6 +76,12 @@ struct EditDepenseView: View {
                     self.date = depense.date
                     self.isRecurring = depense.isRecurring
                     self.isFavorite = depense.isFavorite
+                } else {
+                    self.amount = ""
+                    self.selectedCategory = "Nourriture"
+                    self.date = Date()
+                    self.isRecurring = false
+                    self.isFavorite = false
                 }
             }
 
@@ -89,6 +96,10 @@ struct EditDepenseView: View {
                         }
                 }
             }
+        }
+        .id(refreshID)
+        .onAppear {
+            refreshID = UUID()
         }
     }
 

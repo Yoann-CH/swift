@@ -12,6 +12,9 @@ struct ChartView: View {
     @ObservedObject var userSettings: UserSettings
     @State private var selectedMonth: Int = Calendar.current.component(.month, from: Date())
     @State private var selectedYear: Int = Calendar.current.component(.year, from: Date())
+    @State private var refreshID = UUID()
+    @State private var selectedCategorie: String?
+    @State var showTotalExpensesAlert: Bool = false
     let gradient = LinearGradient(
         gradient: Gradient(colors: [Color.blue.opacity(0.3), Color.blue.opacity(0.5)]),
         startPoint: .bottomTrailing,
@@ -33,10 +36,10 @@ struct ChartView: View {
                         selectMonthAndYear
                         
                         if userSettings.monthlyBudget > 0 && depensesManager.totalDepensesPourMois(mois: selectedMonth, annee: selectedYear) > 0 {
-                            BudgetComparisonGraphView(depensesManager: depensesManager, userSettings: userSettings, selectedMonth: selectedMonth, selectedYear: selectedYear)
+                            BudgetComparisonGraphView(depensesManager: depensesManager, userSettings: userSettings, selectedMonth: selectedMonth, selectedYear: selectedYear, showTotalExpensesAlert: $showTotalExpensesAlert)
                         }
                         
-                        DonutChartView(depensesManager: depensesManager, userSettings: userSettings, selectedMonth: selectedMonth, selectedYear: selectedYear)
+                        DonutChartView(depensesManager: depensesManager, userSettings: userSettings, selectedCategorie: $selectedCategorie, selectedMonth: selectedMonth, selectedYear: selectedYear)
                     }
                 } else {
                     VStack {
@@ -46,7 +49,20 @@ struct ChartView: View {
                     }
                 }
             }
+            .id(refreshID)
+            .onAppear {
+                refreshID = UUID()
+                selectedCategorie = nil
+            }
+            .onTapGesture {
+                if selectedCategorie != nil {
+                    selectedCategorie = nil
+                }
+            }
         }
+        .overlay(
+            showTotalExpensesAlert ? fullScreenOverlay : nil
+        )
     }
 
     private var selectMonthAndYear: some View {
@@ -78,6 +94,36 @@ struct ChartView: View {
         dateFormatter.dateFormat = "MMMM yyyy"
         return dateFormatter.string(from: getDateFromMonthAndYear(month: selectedMonth, year: selectedYear)).capitalized
     }
+    
+    var fullScreenOverlay: some View {
+        ZStack {
+            Rectangle()
+                .fill(Color.black.opacity(0.6))
+                .edgesIgnoringSafeArea(.all)
+                .onTapGesture { self.showTotalExpensesAlert = false }
+
+            CustomAlertView(
+                title: "Dépenses Totales",
+                message: "Le total des dépenses pour \(monthName(selectedMonth)) est de \(formattedTotalExpenses()) \(userSettings.selectedCurrency)",
+                primaryButtonText: "Ok",
+                primaryButtonAction: { self.showTotalExpensesAlert = false }
+            )
+        }
+        .transition(.scale)
+    }
+    
+    private func monthName(_ month: Int) -> String {
+        let dateFormatter = DateFormatter()
+        dateFormatter.locale = Locale(identifier: "fr_FR")
+        dateFormatter.dateFormat = "MMMM yyyy"
+        let date = getDateFromMonthAndYear(month: month, year: selectedYear)
+        return dateFormatter.string(from: date)
+    }
+
+    private func formattedTotalExpenses() -> String {
+        let total = depensesManager.totalDepensesPourMois(mois: selectedMonth, annee: selectedYear)
+        return String(format: "%.2f", total)
+    }
 
 }
 
@@ -87,70 +133,4 @@ private func getDateFromMonthAndYear(month: Int, year: Int) -> Date {
     components.year = year
     components.day = 1
     return Calendar.current.date(from: components) ?? Date()
-}
-
-private func iconForCategory(_ category: String) -> Image {
-    switch category {
-    case "Nourriture":
-        return Image(systemName: "fork.knife")
-    case "Transport":
-        return Image(systemName: "car")
-    case "Loisirs":
-        return Image(systemName: "gamecontroller")
-    case "Autre":
-        return Image(systemName: "square.and.pencil")
-    default:
-        return Image(systemName: "questionmark.circle")
-    }
-}
-
-
-struct DonutSegmentView: View {
-    var center: CGPoint
-    var radius: CGFloat
-    var startAngle: Angle
-    var endAngle: Angle
-    var color: Color
-    var total: Double
-    var categorie: String
-    var selectedCategorie: String?
-    var devise: String
-    var isSelected: Bool {
-        selectedCategorie == categorie
-        
-    }
-    var midAngle: Angle {
-        Angle(degrees: (startAngle.degrees + endAngle.degrees) / 2)
-    }
-
-    var body: some View {
-        ZStack {
-            Path { path in
-                path.move(to: center)
-                path.addArc(center: center, radius: radius, startAngle: startAngle, endAngle: endAngle, clockwise: false)
-            }
-            .fill(color)
-            .scaleEffect(isSelected ? 1.1 : 1.0)
-            .animation(.easeInOut, value: isSelected)
-
-
-
-            if selectedCategorie == categorie {
-                let deviseSymbol = symbolForCurrencyCode(devise)
-                Text("\(total, specifier: "%.2f") \(deviseSymbol)")
-                    .foregroundColor(.white)
-                    .position(
-                        x: center.x + cos(midAngle.radians) * (radius + 10) / 2,
-                        y: center.y + sin(midAngle.radians) * (radius + 10) / 2
-                    )
-            } else {
-                iconForCategory(categorie)
-                    .foregroundColor(.white)
-                    .position(
-                        x: center.x + cos(midAngle.radians) * radius / 2,
-                        y: center.y + sin(midAngle.radians) * radius / 2
-                    )
-            }
-        }
-    }
 }

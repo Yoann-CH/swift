@@ -7,11 +7,10 @@
 
 import SwiftUI
 
-
 struct DonutChartView: View {
     @ObservedObject var depensesManager: DepensesManager
     @ObservedObject var userSettings: UserSettings
-    @State private var selectedCategorie: String?
+    @Binding var selectedCategorie: String?
     var selectedMonth: Int
     var selectedYear: Int
     @State private var pulsateImage = false

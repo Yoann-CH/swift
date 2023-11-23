@@ -21,88 +21,120 @@ struct DepensesListView: View {
     )
 
     var body: some View {
-        NavigationView {
-            ZStack {
-                gradient.edgesIgnoringSafeArea(.all)
-                
-                if depensesManager.depenses.isEmpty {
-                    VStack {
-                        AnimatedImageView(name: "aucuneDepense")
-                        Text("Aucune dépense")
-                            .font(.title)
-                            .foregroundColor(.white)
-                    }
-                } else {
-                    List {
-                        ForEach(depensesManager.depenses) { depense in
-                            HStack {
-                                if depense.isFavorite {
-                                    Image(systemName: "star.fill")
-                                        .foregroundColor(.yellow)
-                                }
-                                VStack(alignment: .leading, spacing: 10) {
-                                    let deviseSymbol = symbolForCurrencyCode(depense.devise)
-                                    Text("Montant: \(depense.montant) \(deviseSymbol)")
-                                    Text("Date: \(formattedDate(depense.date))")
-                                    HStack(alignment: .center) {
-                                        Text("Récurrente: ")
-                                        Image(systemName: depense.isRecurring ? "checkmark.circle" : "xmark.circle")
-                                            .resizable()
-                                            .foregroundColor(depense.isRecurring ? .green : .red)
-                                            .frame(width: 25, height: 25)
-                                    }
-                                }
-                                Spacer()
-                                categoryImage(for: depense.categorie)
-                                    .resizable()
-                                    .frame(width: 100, height: 100)
-                                    .cornerRadius(50)
-                            }
-                            .swipeActions(edge: .leading, allowsFullSwipe: true) {
-                                Button {
-                                    selectedDepense = depense
-                                    showingEditView = true
-                                } label: {
-                                    Label("Modifier", systemImage: "pencil")
-                                }
-                                .tint(.blue)
-                            }
-                            .padding()
-                            .frame(maxWidth: .infinity, alignment: .leading)
-                            .background(Color.white)
-                            .cornerRadius(10)
-                            .shadow(radius: 1)
-                            .listRowBackground(Color.clear)
-                            .listRowInsets(EdgeInsets(top: 5, leading: 16, bottom: 5, trailing: 16))
-                            .listRowSeparator(.hidden)
+        ZStack {
+            NavigationView {
+                ZStack {
+                    gradient.edgesIgnoringSafeArea(.all)
+                    
+                    if depensesManager.depenses.isEmpty {
+                        VStack {
+                            AnimatedImageView(name: "aucuneDepense")
+                            Text("Aucune dépense")
+                                .font(.title)
+                                .foregroundColor(.white)
                         }
-                        .onDelete(perform: deleteDepense)
+                    } else {
+                        List {
+                            ForEach(depensesManager.depenses) { depense in
+                                HStack {
+                                    if depense.isFavorite {
+                                        Image(systemName: "star.fill")
+                                            .foregroundColor(.yellow)
+                                    }
+                                    VStack(alignment: .leading, spacing: 10) {
+                                        let deviseSymbol = symbolForCurrencyCode(depense.devise)
+                                        Text("Montant: \(depense.montant) \(deviseSymbol)")
+                                        Text("Date: \(formattedDate(depense.date))")
+                                        HStack(alignment: .center) {
+                                            Text("Récurrente: ")
+                                            Image(systemName: depense.isRecurring ? "checkmark.circle" : "xmark.circle")
+                                                .resizable()
+                                                .foregroundColor(depense.isRecurring ? .green : .red)
+                                                .frame(width: 25, height: 25)
+                                        }
+                                    }
+                                    Spacer()
+                                    categoryImage(for: depense.categorie)
+                                        .resizable()
+                                        .frame(width: 100, height: 100)
+                                        .cornerRadius(50)
+                                }
+                                .swipeActions(edge: .leading, allowsFullSwipe: true) {
+                                    Button {
+                                        selectedDepense = depense
+                                        showingEditView = true
+                                    } label: {
+                                        Label("Modifier", systemImage: "pencil")
+                                    }
+                                    .tint(.blue)
+                                }
+                                .padding()
+                                .frame(maxWidth: .infinity, alignment: .leading)
+                                .background(Color.white)
+                                .cornerRadius(10)
+                                .shadow(radius: 1)
+                                .listRowBackground(Color.clear)
+                                .listRowInsets(EdgeInsets(top: 5, leading: 16, bottom: 5, trailing: 16))
+                                .listRowSeparator(.hidden)
+                            }
+                            .onDelete(perform: deleteDepense)
+                        }
+                        .listStyle(PlainListStyle())
                     }
-                    .listStyle(PlainListStyle())
                 }
             }
             .sheet(isPresented: $showingEditView, content: {
-                if let depenseToEdit = selectedDepense {
-                    EditDepenseView(depensesManager: depensesManager, isPresented: $showingEditView, editingDepense: depenseToEdit)
-                }
+                EditDepenseView(depensesManager: depensesManager, isPresented: $showingEditView, editingDepense: selectedDepense)
             })
             .onChange(of: selectedDepense) { _ in
                 refreshID = UUID()
             }
             .id(refreshID)
+            .overlay(
+                showingDeleteConfirmation ? deleteConfirmationOverlay : nil
+            )
+            Button(action: {
+                showingEditView = true
+                selectedDepense = nil
+            }) {
+                Image(systemName: "plus")
+                    .padding()
+                    .foregroundColor(.white)
+                    .background(Color.blue)
+                    .clipShape(Circle())
+            }
+            .padding(.trailing)
+            .padding(.top, 50)
+            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topTrailing)
         }
-        .alert(isPresented: $showingDeleteConfirmation) {
-            Alert(
-                title: Text("Supprimer la dépense"),
-                message: Text("Êtes-vous sûr de vouloir supprimer cette dépense?"),
-                primaryButton: .destructive(Text("Supprimer")) {
+    }
+    
+    var deleteConfirmationOverlay: some View {
+        ZStack {
+            Rectangle()
+                .fill(Color.black.opacity(0.6))
+                .edgesIgnoringSafeArea(.all)
+                .onTapGesture { self.showingDeleteConfirmation = false }
+
+            CustomAlertView(
+                title: "Supprimer la dépense",
+                message: "Êtes-vous sûr de vouloir supprimer cette dépense?",
+                primaryButtonText: "Supprimer",
+                primaryButtonAction: {
                     if let indexSet = deleteIndexSet {
                         depensesManager.deleteDepense(at: indexSet)
                     }
+                    self.showingDeleteConfirmation = false
                 },
-                secondaryButton: .cancel(Text("Annuler"))
+                primaryButtonColor: .red,
+                secondaryButtonText: "Annuler",
+                secondaryButtonAction: {
+                    self.showingDeleteConfirmation = false
+                },
+                secondaryButtonColor: .clear
             )
         }
+        .transition(.scale)
     }
     
     func deleteDepense(at offsets: IndexSet) {

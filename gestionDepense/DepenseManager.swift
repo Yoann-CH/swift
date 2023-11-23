@@ -7,14 +7,31 @@
 
 import SwiftUI
 
-class DepensesManager: ObservableObject {
-    @Published var depenses: [Depense] = []
+class DepensesManager: ObservableObject, Codable {
+    @Published var depenses: [Depense] = [] {
+        didSet { saveToFile() }
+    }
     let categories: [String] = ["Nourriture", "Transport", "Loisirs", "Autre"]
     private var userSettings: UserSettings
     private var apiToken = "4f1aacec62cf1b993a4d2c82"
+
+    enum CodingKeys: CodingKey {
+        case depenses, categories
+    }
     
     init(userSettings: UserSettings) {
         self.userSettings = userSettings
+        self.loadFromFile()
+    }
+    
+    required init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        depenses = try container.decode([Depense].self, forKey: .depenses)
+        self.userSettings = UserSettings()
+    }
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(depenses, forKey: .depenses)
     }
     
     func addDepense(_ depense: Depense) {
@@ -64,7 +81,7 @@ class DepensesManager: ObservableObject {
         return data
     }
     
-    func updateDepensesCurrency(to newCurrency: String) {
+    func updateDepensesCurrency(to newCurrency: String, completion: @escaping () -> Void) {
         let uniqueCurrencies = Set(depenses.map { $0.devise })
 
         var exchangeRates = [String: Double]()
@@ -104,6 +121,7 @@ class DepensesManager: ObservableObject {
 
         group.notify(queue: .main) {
             self.applyExchangeRates(exchangeRates, to: newCurrency)
+            completion()
         }
     }
 
@@ -127,5 +145,31 @@ class DepensesManager: ObservableObject {
             }
             return total
         }
+    }
+    
+    func saveToFile() {
+        do {
+            let url = getDocumentsDirectory().appendingPathComponent("DepensesManager.json")
+            let data = try JSONEncoder().encode(self)
+            try data.write(to: url, options: [.atomic])
+        } catch {
+            print("Impossible de sauvegarder les dépenses: \(error)")
+        }
+    }
+
+    func loadFromFile() {
+        let url = getDocumentsDirectory().appendingPathComponent("DepensesManager.json")
+        if let data = try? Data(contentsOf: url) {
+            if let decoded = try? JSONDecoder().decode(DepensesManager.self, from: data) {
+                DispatchQueue.main.async {
+                    self.depenses = decoded.depenses
+                }
+            }
+        }
+    }
+
+    private func getDocumentsDirectory() -> URL {
+        let paths = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)
+        return paths[0]
     }
 }

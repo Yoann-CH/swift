@@ -18,10 +18,12 @@
 		D5A7D6022B0CF1AA00DDD0D3 /* NotificationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5A7D6012B0CF1AA00DDD0D3 /* NotificationView.swift */; };
 		D5A7D6042B0CFC5E00DDD0D3 /* Animation.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5A7D6032B0CFC5E00DDD0D3 /* Animation.swift */; };
 		D5A7D6062B0D00B500DDD0D3 /* DepenseManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5A7D6052B0D00B500DDD0D3 /* DepenseManager.swift */; };
+		D5B589D72B0FA37600393EA2 /* CustomAlertView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5B589D62B0FA37600393EA2 /* CustomAlertView.swift */; };
 		D5E0DF0E2B0B8CB9007FC021 /* gestionDepenseApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5E0DF0D2B0B8CB9007FC021 /* gestionDepenseApp.swift */; };
 		D5E0DF102B0B8CB9007FC021 /* EditDepenseView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5E0DF0F2B0B8CB9007FC021 /* EditDepenseView.swift */; };
 		D5E0DF122B0B8CBA007FC021 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D5E0DF112B0B8CBA007FC021 /* Assets.xcassets */; };
 		D5E0DF152B0B8CBA007FC021 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D5E0DF142B0B8CBA007FC021 /* Preview Assets.xcassets */; };
+		D5EDC44A2B0F822200D4C080 /* DonutSegmentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5EDC4492B0F822200D4C080 /* DonutSegmentView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -36,11 +38,13 @@
 		D5A7D6012B0CF1AA00DDD0D3 /* NotificationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationView.swift; sourceTree = "<group>"; };
 		D5A7D6032B0CFC5E00DDD0D3 /* Animation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Animation.swift; sourceTree = "<group>"; };
 		D5A7D6052B0D00B500DDD0D3 /* DepenseManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DepenseManager.swift; sourceTree = "<group>"; };
+		D5B589D62B0FA37600393EA2 /* CustomAlertView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomAlertView.swift; sourceTree = "<group>"; };
 		D5E0DF0A2B0B8CB8007FC021 /* gestionDepense.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = gestionDepense.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D5E0DF0D2B0B8CB9007FC021 /* gestionDepenseApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = gestionDepenseApp.swift; sourceTree = "<group>"; };
 		D5E0DF0F2B0B8CB9007FC021 /* EditDepenseView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditDepenseView.swift; sourceTree = "<group>"; };
 		D5E0DF112B0B8CBA007FC021 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		D5E0DF142B0B8CBA007FC021 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		D5EDC4492B0F822200D4C080 /* DonutSegmentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DonutSegmentView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -76,9 +80,11 @@
 				D5A7D6032B0CFC5E00DDD0D3 /* Animation.swift */,
 				D571A5692B0E4F5E00CDEAE9 /* BudgetComparisonGraphView.swift */,
 				D571A5632B0DF1B400CDEAE9 /* ChartView.swift */,
+				D5B589D62B0FA37600393EA2 /* CustomAlertView.swift */,
 				D5A7D5FF2B0CA14400DDD0D3 /* Depense.swift */,
 				D5A7D6052B0D00B500DDD0D3 /* DepenseManager.swift */,
 				D571A56B2B0E54F000CDEAE9 /* DonutChartView.swift */,
+				D5EDC4492B0F822200D4C080 /* DonutSegmentView.swift */,
 				D5A7D6012B0CF1AA00DDD0D3 /* NotificationView.swift */,
 				D5A7D5FD2B0CA0D900DDD0D3 /* MainView.swift */,
 				D5A7D5FB2B0CA07700DDD0D3 /* DepensesListView.swift */,
@@ -170,9 +176,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D5B589D72B0FA37600393EA2 /* CustomAlertView.swift in Sources */,
 				D5A7D5FC2B0CA07700DDD0D3 /* DepensesListView.swift in Sources */,
 				D5A7D5FE2B0CA0D900DDD0D3 /* MainView.swift in Sources */,
 				D571A5642B0DF1B400CDEAE9 /* ChartView.swift in Sources */,
+				D5EDC44A2B0F822200D4C080 /* DonutSegmentView.swift in Sources */,
 				D571A5662B0E09BF00CDEAE9 /* UserSettings.swift in Sources */,
 				D5A7D6002B0CA14400DDD0D3 /* Depense.swift in Sources */,
 				D5E0DF102B0B8CB9007FC021 /* EditDepenseView.swift in Sources */,

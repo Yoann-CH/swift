@@ -28,23 +28,17 @@ struct MainView: View {
                 }
                 .tag(0)
             
-            EditDepenseView(depensesManager: depensesManager, isPresented: $isPresented)
-                .tabItem {
-                    Label("Ajouter", systemImage: "plus.circle")
-                }
-                .tag(1)
-            
             ChartView(depensesManager: depensesManager, userSettings: userSettings)
                 .tabItem {
                     Label("Graphique", systemImage: "chart.pie")
                 }
-                .tag(2)
+                .tag(1)
             
             ProfileView(userSettings: userSettings, depensesManager: depensesManager)
                 .tabItem {
                     Label("Profil", systemImage: "person.crop.circle")
                 }
-                .tag(3)
+                .tag(2)
         }
     }
 }
